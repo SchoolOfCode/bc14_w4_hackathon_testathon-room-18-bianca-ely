@@ -28,11 +28,22 @@ test.describe('todo tests',() => {
         await page.getByRole('textbox', {name: 'Task'} ).fill('gym')
         await expect(page.getByRole('textbox', {name: 'Task'})).toHaveValue('gym')
     })
+    // check date field is empty
+    test("date is empty", async({page}) =>{
+        await expect(page.getByLabel(" Completion date ")).toBeEmpty();
+    });
+    // select date
+    
+    test("select date", async ({page}) => {
+        await page.fill("[type=date]", "2023-04-10");
+        await expect(page.getByLabel(" Completion date ")).toHaveValue("2023-04-10");
+    })
+
 
 })
 
 
-// check date field is empty
+
 // click create
 // check error messages for empty fields
 // input into task
