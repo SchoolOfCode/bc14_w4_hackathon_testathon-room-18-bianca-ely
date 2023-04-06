@@ -41,7 +41,7 @@ test.describe('todo tests',() => {
     test('create button', async ({page}) => {
         await page.getByTitle("Create a new todo").click();
         //test the error message
-        // expect(page.getByRole('textbox')).toThrowError()
+        // expect(page.getByRole('textbox')).toThrowError();
 
         //check list is empty
         await expect(page.getByRole("list")).toBeEmpty();
@@ -55,11 +55,11 @@ test.describe('todo tests',() => {
         await page.getByTitle("Create a new todo").click(); // click button to add item to list
 
         await expect(page.getByRole("list")).toHaveText(/gym/); // Test if gym was added to the list
+        await expect(page.getByRole("time")).toHaveText('2023-04-10'); // Test if the correct date was added
 
         await page.reload(); //Refresh the page
         await expect(page.getByRole('list')).toHaveCount(1) ; // Test if list has one item
     });
-
 
     // Add item to the list, delete the item and test if the item was deleted
     test("added item is deleted from the list", async ({page}) => {
@@ -72,6 +72,22 @@ test.describe('todo tests',() => {
         //Test if item was deleted from the list 
         await expect(page.getByRole('list')).toBeEmpty();
     });
+
+    test("multiple list items", async({page}) => {
+        await page.getByRole('textbox', {name: 'Task'} ).fill('gym') // fill input
+        await page.fill("[type=date]", "2023-04-10");  //f select date
+        await page.getByTitle("Create a new todo").click(); // click button to add item to list
+        await page.getByRole('textbox', {name: 'Task'} ).fill('walk dog') // fill input
+        await page.fill("[type=date]", "2023-04-11");  //f select date
+        await page.getByTitle("Create a new todo").click(); // click button to add item to list
+
+        const list = page.locator('list > .component');
+        await expect(list).toHaveCount(3);
+        // await expect(page.getByRole('list')).toContainText([/gym/,/walk dog/]);
+
+        await page.reload(); //Refresh the page
+        await expect(page.getByRole('list')).toHaveCount(2);
+    })
 
 })
 
