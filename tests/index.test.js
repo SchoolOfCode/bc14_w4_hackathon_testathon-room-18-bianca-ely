@@ -40,8 +40,38 @@ test.describe('todo tests',() => {
     // test button works with no inputs in date or item field
     test('create button', async ({page}) => {
         await page.getByTitle("Create a new todo").click();
-        expect(page.getByRole('textbox', {name: 'Task'})).t
+        //test the error message
+        // expect(page.getByRole('textbox')).toThrowError()
+
+        //check list is empty
+        await expect(page.getByRole("list")).toBeEmpty();
     })
+
+    //check if item is added to the list if input added and date field completed
+    test("add item to list", async ({page}) => {
+        // Actions: 
+        await page.getByRole('textbox', {name: 'Task'} ).fill('gym') // fill input
+        await page.fill("[type=date]", "2023-04-10");  //f select date
+        await page.getByTitle("Create a new todo").click(); // click button to add item to list
+
+        await expect(page.getByRole("list")).toHaveText(/gym/); // Test if gym was added to the list
+
+        await page.reload(); //Refresh the page
+        await expect(page.getByRole('list')).toHaveCount(1) ; // Test if list has one item
+    });
+
+
+    // Add item to the list, delete the item and test if the item was deleted
+    test("added item is deleted from the list", async ({page}) => {
+        // Actions: 
+        await page.getByRole('textbox', {name: 'Task'} ).fill('gym') // fill input
+        await page.fill("[type=date]", "2023-04-10");  //f select date
+        await page.getByTitle("Create a new todo").click(); // click button to add item to list
+        // click the delete button
+        await page.getByTitle("Delete this todo").click();
+        //Test if item was deleted from the list 
+        await expect(page.getByRole('list')).toBeEmpty();
+    });
 
 })
 
