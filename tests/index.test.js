@@ -33,12 +33,15 @@ test.describe('todo tests',() => {
         await expect(page.getByLabel(" Completion date ")).toBeEmpty();
     });
     // select date
-    
     test("select date", async ({page}) => {
         await page.fill("[type=date]", "2023-04-10");
         await expect(page.getByLabel(" Completion date ")).toHaveValue("2023-04-10");
     })
-
+    // test button works with no inputs in date or item field
+    test('create button', async ({page}) => {
+        await page.getByTitle("Create a new todo").click();
+        expect(page.getByRole('textbox', {name: 'Task'})).t
+    })
 
 })
 
